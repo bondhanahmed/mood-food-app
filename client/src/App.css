@@ -1,0 +1,179 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #e6b8fb;
+    margin: 0;
+    padding: 0;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.topbar-logo {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #444;
+}
+
+.topbar-icon {
+    font-size: 1.5rem;
+    color: #888;
+    cursor: pointer;
+}
+
+.topbar-icon.left {
+    margin-right: auto;
+}
+
+.topbar-icon.right {
+    margin-left: auto;
+}
+  
+
+h1 {
+    font-size: 45px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #b0b0b0;
+    background: rgb(255, 255, 255);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #e084ec;
+}
+
+.mood-buttons {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.mood-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #ffffff;
+    color: #333;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.mood-button:hover {
+    background-color: #ffdf6a;
+}
+
+.mood-button:active {
+    background-color: #ffafe2;
+    border-color: #e084ec;
+}
+
+.recipe-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+    max-height: 900px;
+    width: 350px;
+    height: 350px;
+}
+
+.recipe-card img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+.recipe-grid {
+    display: flex;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.favourite-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.favourite-icon:hover {
+    color: #ff70a6;
+}
+
+.favourited {
+    color: #ff70a6;
+}
+
+.favourites-link {
+    display: inline-block;
+    margin: 1rem 0;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: #444;
+    background-color: #f2f2f2;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.favourites-link:hover {
+    background-color: #e6e6e6;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 60px;
+    left: 10px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    padding: 0.5rem 1rem;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.dropdown-menu a {
+    text-decoration: none;
+    color: #444;
+    font-weight: 500;
+    padding: 0.25rem 0;
+    transition: color 0.2s;
+}
+
+.dropdown-menu a:hover {
+    color: #ff70a6;
+}
+
