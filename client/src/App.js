@@ -13,33 +13,29 @@ import FavouritesPage from './pages/FavouritesPage';
 import MoodTextInput from './components/MoodTextInput';
 
 
-
-
 function App() {
   const [moodKeywords, setMoodKeywords] = useState([]);
   const [selectedMood, setSelectedMood] = useState(null);
   const [recipes, setRecipes] = useState([]);
   const [moodLogs, setMoodLogs] = useState([]);
   const [externalRecipes, setExternalRecipes] = useState([]);
-  const [filters, setFilters] = useState({ cuisine: '', maxTime: '' });
+  const [filters, setFilters] = useState({ cuisine: '', maxTime: '', diet: '' });
   const [favourites, setFavourites] = useState(() => {
     const stored = localStorage.getItem('favourites');
     return stored ? JSON.parse(stored) : [];
   });
+  
   const toggleFavourite = (recipe) => {
+    const uniqueKey = `${recipe.id || recipe._id}-${recipe.title}`;
     setFavourites((prevFaves) => {
-      const uniqueKey = `${recipe.id || recipe._id}-${recipe.title}`;
       const exists = prevFaves.some(fav => `${fav.id || fav._id}-${fav.title}` === uniqueKey);
-      if (exists) {
-        return prevFaves.filter(fav => `${fav.id || fav._id}-${fav.title}` !== uniqueKey);
-      } else {
-        return [...prevFaves, recipe];
-      }
+      return exists
+        ? prevFaves.filter(fav => `${fav.id || fav._id}-${fav.title}` !== uniqueKey)
+        : [...prevFaves, recipe];
     });
   };
   const handleNlpMoodInput = async (text) => {
     console.log("User submitted mood description:", text);
-    
     try {
       const response = await fetch('http://localhost:5000/api/nlp/mood-description', {
         method: 'POST',
@@ -48,22 +44,19 @@ function App() {
       });
 
       const data = await response.json();
-
       if (data.keywords?.mood) {
         setSelectedMood(data.keywords.mood);
+        setMoodKeywords(data.keywords.foods || []);
         console.log("Detected mood:", data.keywords.mood);
-        console.log("Suggested foods:", data.keywords.foods);
-        setMoodKeywords(data.keywords.foods || []); 
+        console.log("Suggested foods:", data.keywords.foods); 
       } else {
         console.warn("No mood returned from NLP response");
       }
-
     } catch (error) {
       console.error('Error during NLP mood fetch:', error);
     }
   };
 
-  
 
   useEffect(() => {
     const sorted = [...favourites].sort((a, b) => a.title.localeCompare(b.title));
@@ -71,28 +64,41 @@ function App() {
   }, [favourites]);
   
   
-
   useEffect(() => {
+    const hasFilter = selectedMood || moodKeywords.length > 0 || filters.cuisine || filters.maxTime || filters.diet;
+
+    if (!hasFilter) return;
+
+    const searchTerm = moodKeywords[0] || selectedMood || 'healthy';
+    const encodedTerm = encodeURIComponent(searchTerm);
+
+    // Fetch internal recipes if mood is present
     if (selectedMood) {
-      // fetching internal recipes
       fetch(`http://localhost:5000/api/recipes/mood/${selectedMood}`)
         .then((res) => res.json())
         .then((data) => setRecipes(data))
-        .catch((err) => console.error('Error fetching recipes:', err));
-      
-      //fetching Spoonacular recipes
-      const searchTerm = moodKeywords[0] || selectedMood || 'healthy';
-      const encodedTerm = encodeURIComponent(searchTerm); // handles spaces like "green tea"
-      
-      fetch(`http://localhost:5000/api/external-recipes/${encodedTerm}?cuisine=${filters.cuisine}&maxTime=${filters.maxTime}`)
-        .then((res) => res.json())
-        .then((data) => {
-          console.log('Spoonacular response for mood:', selectedMood, data);
-          setExternalRecipes(Array.isArray(data) ? data : []);
-        })
-        .catch((err) => console.error('Error fetching Spoonacular recipes:', err));
+        .catch((err) => console.error('Error fetching internal recipes:', err));
     }
-  }, [selectedMood, filters.cuisine, filters.maxTime]);
+
+    // Determine safest search term for Spoonacular
+    //const fallback = selectedMood || 'healthy';
+    //const searchTerm = (moodKeywords && moodKeywords.length > 0)
+    //? moodKeywords[0]
+    //: fallback;
+    //const encodedTerm = encodeURIComponent(searchTerm);
+
+    //console.log("Fetching Spoonacular with:", encodedTerm);
+
+    // Fetch Spoonacular recipes
+    fetch(`http://localhost:5000/api/external-recipes/${encodedTerm}?cuisine=${filters.cuisine}&maxTime=${filters.maxTime}&diet=${filters.diet}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('Spoonacular response for mood/filters:', data);
+        setExternalRecipes(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => console.error('Error fetching Spoonacular recipes:', err));
+  }, [selectedMood, moodKeywords, filters.cuisine, filters.maxTime, filters.diet]);
+
 
   const logMood = () => {
     if (selectedMood) {
@@ -124,25 +130,26 @@ function App() {
             </Link>
 
             <MoodTextInput onSubmit={handleNlpMoodInput} />
-
             <FilterBar onFilterChange={setFilters} style={{padding: '2rem'}}/>
-            <MoodSelector style={{pdding: '2rem'}}
-              onSelectMood={setSelectedMood}
-              disabled={!filters.cuisine || !filters.maxTime}
-            />
+            <MoodSelector onSelectMood={setSelectedMood}/>
 
-            {selectedMood && (
+            {(selectedMood || externalRecipes.length > 0) && (
               <>
-                <p><strong>Selected mood:</strong> {selectedMood}</p>
-                <button onClick={logMood}>Log This Mood</button>
-                <RecipeList recipes={recipes} />
-                <ExternalRecipeList 
+                {selectedMood && (
+                  <>
+                    <p><strong>Selected mood:</strong> {selectedMood}</p>
+                    <button onClick={logMood}>Log This Mood</button>
+                    <RecipeList recipes={recipes} />
+                  </>
+                )}
+                <ExternalRecipeList
                   recipes={externalRecipes}
                   favourites={favourites}
                   toggleFavourite={toggleFavourite}
                 />
               </>
             )}
+
 
             {moodLogs.length > 0 && (
               <div style={{ marginTop: '2rem' }}>

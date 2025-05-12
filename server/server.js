@@ -1,7 +1,8 @@
 // Entry point of the backend server
+require('dotenv').config();
+const express = require('express');
 const app = require('./app');
 const mongoose = require('mongoose');
-require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
 

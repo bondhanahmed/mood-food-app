@@ -10,7 +10,7 @@ exports.getAllRecipes = async (req, res) => {
   }
 };
 
-// Create a new recipe
+// New recipe
 exports.createRecipe = async (req, res) => {
   const newRecipe = new Recipe(req.body);
 
@@ -22,7 +22,7 @@ exports.createRecipe = async (req, res) => {
   }
 };
 
-// Get recipes by mood tag
+// Recipes by mood tag
 exports.getRecipesByMood = async (req, res) => {
     const { mood } = req.params;
   
@@ -33,4 +33,17 @@ exports.getRecipesByMood = async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   };
-  
+
+// Single recipe by ID
+exports.getRecipeById = async (req, res) => {
+  try {
+    console.log("Backend received recipe ID:", req.params.id);
+
+    const recipe = await Recipe.findById(req.params.id);
+    if (!recipe) return res.status(404).json({ message: 'Recipe not found' });
+    res.json(recipe);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+

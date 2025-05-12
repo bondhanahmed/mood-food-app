@@ -3,17 +3,23 @@ const express = require('express');
 const cors = require('cors');
 const recipeRoutes = require('./routes/recipeRoutes');
 const userRoutes = require('./routes/userRoutes');
-
 const app = express();
+const moodLogRoutes = require('./routes/moodLogRoutes');
+const externalRecipeRoutes = require('./routes/externalRecipeRoutes');
+const nlpRoutes = require('./routes/nlpRoutes');
+
 
 app.use(cors());
 app.use(express.json());
 
-// Mount API routes
+// Mounting routes
+app.use('/api/nlp', nlpRoutes);
+app.use('/api/moodlogs', moodLogRoutes);
+app.use('/api/external-recipes', externalRecipeRoutes);
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/users', userRoutes);
 
-// Default root route
+
 app.get('/', (req, res) => {
   res.send('Mood-based Recipe API');
 });
