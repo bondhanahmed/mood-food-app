@@ -19,7 +19,7 @@ router.get('/:keyword', async (req, res) => {
   try {
     const params = {
       query: mappedKeyword,
-      number: 500,
+      number: 1000,
       addRecipeInformation: true,
       instructionsRequired: true,
       apiKey: SPOONACULAR_API_KEY
