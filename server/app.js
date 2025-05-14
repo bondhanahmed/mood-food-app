@@ -12,7 +12,7 @@ const nlpRoutes = require('./routes/nlpRoutes');
 app.use(cors());
 app.use(express.json());
 
-// Mounting routes
+// Mounted routes
 app.use('/api/nlp', nlpRoutes);
 app.use('/api/moodlogs', moodLogRoutes);
 app.use('/api/external-recipes', externalRecipeRoutes);

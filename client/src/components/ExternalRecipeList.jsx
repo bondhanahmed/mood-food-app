@@ -1,8 +1,11 @@
 import React from 'react';
+import { useAuth } from '../context/AuthContext';
+
 
 export default function ExternalRecipeList({ recipes, favourites, toggleFavourite }) {
     //console.log('ExternalRecipeList received:', recipes);
-    
+    const { user } = useAuth();
+
     if (!recipes) {
         return <p>Loading external recipes...</p>;
     }
@@ -19,12 +22,16 @@ export default function ExternalRecipeList({ recipes, favourites, toggleFavourit
   
           return (
             <div className="recipe-card" key={recipe.id} style={{ position: 'relative' }}>
-              <button
-                className={`favourite-icon ${isFavourited ? 'favourited' : ''}`}
-                onClick={() => toggleFavourite(recipe)}
-              >
-                ♥
-              </button>
+              
+              {/* Only shows heart if user is logged in */}
+              {user && (
+                <button
+                  className={`favourite-icon ${isFavourited ? 'favourited' : ''}`}
+                  onClick={() => toggleFavourite(recipe)}
+                >
+                  ♥
+                </button>
+              )}
   
               <h3>{recipe.title}</h3>
               {recipe.image && <img src={recipe.image} alt={recipe.title} />}

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
 import './App.css';
+
+import { Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Profile from './pages/Profile';
 import TopBar from './components/TopBar';
 import MoodSelector from './components/MoodSelector';
 import RecipeList from './components/RecipeList';
@@ -14,6 +19,7 @@ import MoodTextInput from './components/MoodTextInput';
 
 
 function App() {
+  const { user } = useAuth();
   const [moodKeywords, setMoodKeywords] = useState([]);
   const [selectedMood, setSelectedMood] = useState(null);
   const [recipes, setRecipes] = useState([]);
@@ -80,14 +86,6 @@ function App() {
         .catch((err) => console.error('Error fetching internal recipes:', err));
     }
 
-    // Determine safest search term for Spoonacular
-    //const fallback = selectedMood || 'healthy';
-    //const searchTerm = (moodKeywords && moodKeywords.length > 0)
-    //? moodKeywords[0]
-    //: fallback;
-    //const encodedTerm = encodeURIComponent(searchTerm);
-
-    //console.log("Fetching Spoonacular with:", encodedTerm);
 
     // Fetch Spoonacular recipes
     fetch(`http://localhost:5000/api/external-recipes/${encodedTerm}?cuisine=${filters.cuisine}&maxTime=${filters.maxTime}&diet=${filters.diet}`)
@@ -117,12 +115,16 @@ function App() {
   };
 
   return (
+    <>
+    <TopBar key={user ? user.username : 'guest'} />
+
     <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route
         path="/"
         element={
           <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-            <TopBar />
             <h1 style={{padding: '0.5rem', fontFamily: 'Calibri', color: 'blueviolet'}}>Foodie Recommender</h1>
             
             <Link to="/favourites" className="favourites-link">
@@ -178,7 +180,10 @@ function App() {
         }
       />
 
+      <Route path="/profile" element={<Profile />} />
+
     </Routes>
+    </>
   );
 }
 
