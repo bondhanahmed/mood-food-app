@@ -1,7 +1,6 @@
 // Express application configuration
 const express = require('express');
 const cors = require('cors');
-const recipeRoutes = require('./routes/recipeRoutes');
 const userRoutes = require('./routes/userRoutes');
 const app = express();
 const moodLogRoutes = require('./routes/moodLogRoutes');
@@ -16,7 +15,6 @@ app.use(express.json());
 app.use('/api/nlp', nlpRoutes);
 app.use('/api/moodlogs', moodLogRoutes);
 app.use('/api/external-recipes', externalRecipeRoutes);
-app.use('/api/recipes', recipeRoutes);
 app.use('/api/users', userRoutes);
 
 

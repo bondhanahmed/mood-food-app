@@ -25,7 +25,7 @@ export default function TopBar() {
       />
 
       {/* Centre: Logo */}
-      <span className="topbar-logo">🍽️ MoodMeals</span>
+      <img src={require('./logo_foodie.jpg')} alt="MoodMeals Logo" className="topbar-logo" />
 
       {/* Right: Auth status */}
       <div className="topbar-icon right" style={{ position: 'relative' }}>
@@ -38,7 +38,7 @@ export default function TopBar() {
             <FaUserCircle
               className="cursor-pointer"
               title="Profile"
-              size={24}
+              size={30}
               onClick={() => setProfileOpen(prev => !prev)}
             />
             {profileOpen && (
@@ -47,7 +47,7 @@ export default function TopBar() {
                 <Link to="/profile" onClick={() => setProfileOpen(false)}>Profile</Link>
                 <Link to="/favourites" onClick={() => setProfileOpen(false)}>Favourites</Link>
                 <Link to="/dashboard" onClick={() => setProfileOpen(false)}>Dashboard</Link>
-                <button onClick={handleLogout}>Logout</button>
+                <button onClick={handleLogout} className="logout-button">Logout</button>
               </div>
             )}
           </>

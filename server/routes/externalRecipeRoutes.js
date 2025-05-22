@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
+const { getExternalRecipeById } = require('../controllers/externalRecipeController');
 
 const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
 
@@ -46,5 +47,7 @@ router.get('/:keyword', async (req, res) => {
     });
   }
 });
+
+router.get('/detail/:id', getExternalRecipeById);
 
 module.exports = router;

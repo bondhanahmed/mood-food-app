@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 
 export default function ExternalRecipeList({ recipes, favourites, toggleFavourite }) {
@@ -33,13 +34,16 @@ export default function ExternalRecipeList({ recipes, favourites, toggleFavourit
                 </button>
               )}
   
-              <h3>{recipe.title}</h3>
+              <h3>
+                <Link to={`/recipe/external/${recipe.id}`}>
+                  {recipe.title}
+                </Link>
+              </h3>
               {recipe.image && <img src={recipe.image} alt={recipe.title} />}
               <p>
-                <a href={`https://spoonacular.com/recipes/${recipe.title.replace(/\s+/g, '-').toLowerCase()}-${recipe.id}`}
-                   target="_blank" rel="noopener noreferrer">
+                <Link to={`/recipe/external/${recipe.id}`}>
                   View full recipe
-                </a>
+                </Link>
               </p>
             </div>
           );

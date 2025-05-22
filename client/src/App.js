@@ -5,13 +5,16 @@ import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
+
 import Profile from './pages/Profile';
 import TopBar from './components/TopBar';
+
 import MoodSelector from './components/MoodSelector';
-import RecipeList from './components/RecipeList';
+//import RecipeList from './components/RecipeList';
 import RecipeDetail from './pages/RecipeDetail';
-import RecipeForm from './pages/RecipeForm';
+//import RecipeForm from './pages/RecipeForm';
 import ExternalRecipeList from './components/ExternalRecipeList';
+
 import FilterBar from './components/FilterBar';
 import { Link } from 'react-router-dom';
 import FavouritesPage from './pages/FavouritesPage';
@@ -22,7 +25,7 @@ function App() {
   const { user } = useAuth();
   const [moodKeywords, setMoodKeywords] = useState([]);
   const [selectedMood, setSelectedMood] = useState(null);
-  const [recipes, setRecipes] = useState([]);
+  //const [recipes, setRecipes] = useState([]);
   const [moodLogs, setMoodLogs] = useState([]);
   const [externalRecipes, setExternalRecipes] = useState([]);
   const [filters, setFilters] = useState({ cuisine: '', maxTime: '', diet: '' });
@@ -82,7 +85,7 @@ function App() {
     if (selectedMood) {
       fetch(`http://localhost:5000/api/recipes/mood/${selectedMood}`)
         .then((res) => res.json())
-        .then((data) => setRecipes(data))
+        //.then((data) => setRecipes(data))
         .catch((err) => console.error('Error fetching internal recipes:', err));
     }
 
@@ -141,7 +144,6 @@ function App() {
                   <>
                     <p><strong>Selected mood:</strong> {selectedMood}</p>
                     <button onClick={logMood}>Log This Mood</button>
-                    <RecipeList recipes={recipes} />
                   </>
                 )}
                 <ExternalRecipeList
@@ -168,8 +170,7 @@ function App() {
           </div>
         }
       />
-      <Route path="/recipe/:id" element={<RecipeDetail />} />
-      <Route path="/submit" element={<RecipeForm />} />
+      <Route path="/recipe/:source/:id" element={<RecipeDetail />} />
       <Route
         path="/favourites"
         element={
